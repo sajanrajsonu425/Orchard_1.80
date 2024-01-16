@@ -31,13 +31,12 @@ steps:
     command: custom
     custom: 'build'
 
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet publish'
-  inputs:
-    command: custom
-    custom: 'publish'
-    arguments: 'OrchardCore.sln -c Release -o "$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish" -property:TargetFramework=net8.0'
-  enabled: true
+# - task: DotNetCoreCLI@2
+#   displayName: 'dotnet publish'
+#   inputs:
+#     command: custom
+#     custom: 'publish'
+#     arguments: 'OrchardCore.sln -c Release -o "$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish" -property:TargetFramework=net8.0'
 
 # - task: DotNetCoreCLI@2
 #   inputs:
@@ -48,9 +47,9 @@ steps:
 #     modifyOutputPath: false
 
 
-# - task: CmdLine@2
-#   inputs:
-#     script: 'dotnet publish OrchardCore.sln -c Release -o "$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish" -property:TargetFramework=net8.0'
+- task: CmdLine@2
+  inputs:
+    script: 'dotnet publish OrchardCore.sln -c Release -o "$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish" -property:TargetFramework=net8.0'
 
 - task: ArchiveFiles@2
   displayName: 'Archieve File'
