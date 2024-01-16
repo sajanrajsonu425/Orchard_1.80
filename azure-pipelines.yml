@@ -1,0 +1,58 @@
+
+trigger:
+- master
+
+pool:
+  name: 'sajanrajsonu'
+
+steps:
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet version'
+  inputs:
+    command: custom
+    custom: '--version'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet clean'
+  inputs:
+    command: custom
+    custom: 'clean'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
+  inputs:
+    command: custom
+    custom: 'restore'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  inputs:
+    command: custom
+    custom: 'build'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet publish'
+  inputs:
+    command: custom
+    custom: 'publish OrchardCore.sln -c Release -o "$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish" -property:TargetFramework=net8.0'
+
+# - task: CmdLine@2
+#   inputs:
+#     script: 'dotnet publish OrchardCore.sln -c Release -o "$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish" -property:TargetFramework=net8.0'
+
+- task: ArchiveFiles@2
+  displayName: 'Archieve File'
+  inputs:
+    rootFolderOrFile: '$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true  
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Build Artifact'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
