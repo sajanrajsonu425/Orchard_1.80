@@ -35,7 +35,18 @@ steps:
   displayName: 'dotnet publish'
   inputs:
     command: custom
-    custom: 'publish OrchardCore.sln -c Release -o "$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish" -property:TargetFramework=net8.0'
+    custom: 'publish'
+    arguments: 'OrchardCore.sln -c Release -o "$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish" -property:TargetFramework=net8.0'
+  enabled: false
+
+# - task: DotNetCoreCLI@2
+#   inputs:
+#     command: 'publish'
+#     publishWebProjects: true
+#     arguments: 'OrchardCore.sln -c Release -o "$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish" -property:TargetFramework=net8.0'
+#     zipAfterPublish: false
+#     modifyOutputPath: false
+
 
 # - task: CmdLine@2
 #   inputs:
