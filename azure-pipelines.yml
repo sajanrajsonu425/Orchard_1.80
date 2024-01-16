@@ -37,7 +37,7 @@ steps:
     command: custom
     custom: 'publish'
     arguments: 'OrchardCore.sln -c Release -o "$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish" -property:TargetFramework=net8.0'
-  enabled: false
+  enabled: true
 
 # - task: DotNetCoreCLI@2
 #   inputs:
