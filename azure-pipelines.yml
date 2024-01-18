@@ -54,7 +54,7 @@ steps:
 - task: ArchiveFiles@2
   displayName: 'Archieve File'
   inputs:
-    rootFolderOrFile: '$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0'
+    rootFolderOrFile: '$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish'
     includeRootFolder: true
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
