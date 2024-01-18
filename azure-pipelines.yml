@@ -14,25 +14,25 @@ steps:
     custom: '--version'
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet clean'
+  displayName: 'Clean'
   inputs:
     command: custom
     custom: 'clean'
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet restore'
+  displayName: 'Restore'
   inputs:
     command: custom
     custom: 'restore'
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet build'
+  displayName: 'Build'
   inputs:
     command: custom
     custom: 'build'
 
 # - task: DotNetCoreCLI@2
-#   displayName: 'dotnet publish'
+#   displayName: 'Publish'
 #   inputs:
 #     command: custom
 #     custom: 'publish'
@@ -48,11 +48,12 @@ steps:
 
 
 - task: CmdLine@2
+  displayName: 'Publish'
   inputs:
     script: 'dotnet publish OrchardCore.sln -c Release -o "$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish" -property:TargetFramework=net8.0'
 
 - task: ArchiveFiles@2
-  displayName: 'Archieve File'
+  displayName: 'Archieve Publish File'
   inputs:
     rootFolderOrFile: '$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish'
     includeRootFolder: true
