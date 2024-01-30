@@ -1,44 +1,68 @@
 trigger:
-- main
+- master
 
 pool:
   name: 'sajanrajsonu'
 
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-
 steps:
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet restore'
-  inputs:
-    command: restore
-    projects: ./src/NopCommerce.sln
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet build'
+  displayName: 'dotnet version'
   inputs:
-    projects: ./src/NopCommerce.sln
-    arguments: '--configuration $(BuildConfiguration)'
+    command: custom
+    custom: '--version'
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet test'
+  displayName: 'Clean'
   inputs:
-    command: test
-    projects: |
-     ./src/Tests/Nop.Core.Tests/Nop.Core.Tests.csproj
-     ./src/Tests/Nop.Web.MVC.Tests/Nop.Web.MVC.Tests.csproj
-     ./src/Tests/Nop.Services.Tests/Nop.Services.Tests.csproj
-    arguments: '--configuration $(BuildConfiguration)'
+    command: custom
+    custom: 'clean'
 
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet publish'
+  displayName: 'Restore'
   inputs:
-    command: publish
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    command: custom
+    custom: 'restore'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build'
+  inputs:
+    command: custom
+    custom: 'build'
+
+# - task: DotNetCoreCLI@2
+#   displayName: 'Publish'
+#   inputs:
+#     command: custom
+#     custom: 'publish'
+#     arguments: 'OrchardCore.sln -c Release -o "$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish" -property:TargetFramework=net8.0'
+
+# - task: DotNetCoreCLI@2
+#   inputs:
+#     command: 'publish'
+#     publishWebProjects: true
+#     arguments: 'OrchardCore.sln -c Release -o "$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish" -property:TargetFramework=net8.0'
+#     zipAfterPublish: false
+#     modifyOutputPath: false
+
+
+- task: CmdLine@2
+  displayName: 'Publish'
+  inputs:
+    script: 'dotnet publish OrchardCore.sln -c Release -o "$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish" -property:TargetFramework=net8.0'
+
+- task: ArchiveFiles@2
+  displayName: 'Archieve Publish File'
+  inputs:
+    rootFolderOrFile: '$(Build.Repository.LocalPath)\src\OrchardCore.Cms.Web\bin\Release\net8.0\publish'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true  
 
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
+  displayName: 'Publish Build Artifact'
   inputs:
-    ArtifactName: '$(Parameters.ArtifactName)'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
